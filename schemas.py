@@ -21,3 +21,11 @@ class TransactionRespone(TransactionBase):
 
     class Config:
         from_attributes = True # agar pydantic bisa membaca object SQLAlchemy dari database
+
+# 4. skema untuk update
+class TransactionUpdate(BaseModel):
+    status: Optional[str] = None
+    selling_price: Optional[int] = None
+    capital_price: Optional[int] = None
+    product_description: Optional[str] = None
+    customer_name: Optional[str] = None
