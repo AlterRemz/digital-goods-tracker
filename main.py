@@ -44,7 +44,7 @@ def update_transaction(transaction_id: int, transaction_update: schemas.Transact
     return db_transaction
 
 # Endpoint 5: Menghapus Data Transaksi
-@app.delete("/transaction/{transaction_id}")
+@app.delete("/transactions/{transaction_id}")
 def delete_transaction(transaction_id: int, db: Session = Depends(get_db)):
     db_transaction = crud.delete_transaction(db=db, transaction_id=transaction_id)
 

@@ -101,7 +101,25 @@ async def update_transaksi(ctx, id_transaksi: int, status_baru: str):
     except Exception as e:
         await ctx.send(f"⚠️ Terjadi error koneksi: {e}")
 
+# command untuk menghapus transaksi
+@bot.command(name="delete")
+async def hapus_transaksi(ctx, id_transaksi: int):
+    url = f"{API_URL}{id_transaksi}"
 
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.delete(url) as response:
+                
+                if response.status == 200:
+                    data = await response.json() 
+                    await ctx.send(f"🗑️ **Data Dihapus!**\n{data['pesan']}")
+                elif response.status == 404:
+                    await ctx.send(f"❌ Transaksi dengan ID `{id_transaksi}` tidak ditemukan.")
+                else:
+                    await ctx.send(f"❌ Gagal menghapus. Status code: {response.status}")
+
+    except Exception as e:
+        await ctx.send(f"⚠️ Terjadi error koneksi: {e}")
 
 if TOKEN is None:
     print("Error: Token Discord tidak di temukan di file .env!")
