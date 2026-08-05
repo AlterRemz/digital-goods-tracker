@@ -74,6 +74,35 @@ async def cek_profit(ctx):
         print(f"Error Koneksi: {e}")
         await ctx.send(f"⚠️ Terjadi error saat menghubungi API: {e}")
 
+# command untuk mengubah status transaksi 
+@bot.command(name="update")
+async def update_transaksi(ctx, id_transaksi: int, status_baru: str):
+    payload = {
+        "status": status_baru.upper()
+    }
+    url = f"{API_URL}{id_transaksi}"
+
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.put(url, json=payload) as response:
+
+                if response.status == 200:
+                    data = await response.json()
+                    await ctx.send(
+                        f"🔄 **Update Berhasil!**\n"
+                        f"Transaksi ID `{data['id']}` (Pelanggan: {data['customer_name']})\n"
+                        f"Status sekarang: **{data['status']}**"
+                    )
+                elif response.status == 404:
+                    await ctx.send(f"❌ Transaksi dengan ID `{id_transaksi}` tidak ditemukan.")
+                else:
+                    await ctx.send(f"❌ Gagal update. Status code: {response.status}")
+
+    except Exception as e:
+        await ctx.send(f"⚠️ Terjadi error koneksi: {e}")
+
+
+
 if TOKEN is None:
     print("Error: Token Discord tidak di temukan di file .env!")
 else:
