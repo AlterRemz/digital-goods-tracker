@@ -121,6 +121,42 @@ async def hapus_transaksi(ctx, id_transaksi: int):
     except Exception as e:
         await ctx.send(f"⚠️ Terjadi error koneksi: {e}")
 
+# command untuk melihat daftar transaksi terakhir
+@bot.command(name="list")
+async def list_transaksi(ctx, jumlah: int = 5):
+    
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(API_URL) as response:
+                
+                if response.status == 200:
+                    data = await response.json()
+                    
+                    if not data:
+                        await ctx.send("📭 Belum ada data transaksi yang tersimpan.")
+                        return
+
+                    transaksi_terakhir = data[-jumlah:]
+                    
+                    pesan = f"📋 **{len(transaksi_terakhir)} Transaksi Terakhir:**\n\n"
+                    
+                    for t in transaksi_terakhir:
+                        profit_item = t['selling_price'] - t['capital_price']
+                        
+                        pesan += (
+                            f"🔹 **ID: {t['id']}** | {t['customer_name']}\n"
+                            f"   Produk: {t['product_description']}\n"
+                            f"   Status: `{t['status']}` | Untung: Rp {profit_item:,}\n"
+                        )
+                        
+                    await ctx.send(pesan)
+                else:
+                    await ctx.send(f"❌ Gagal mengambil data. Status: {response.status}")
+
+    except Exception as e:
+        print(f"Error Koneksi: {e}")
+        await ctx.send(f"⚠️ Terjadi error saat menghubungi API: {e}")
+
 if TOKEN is None:
     print("Error: Token Discord tidak di temukan di file .env!")
 else:
