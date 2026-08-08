@@ -58,7 +58,7 @@ async def catat_transaksi(ctx, nama: str, produk: str, modal: int, jual: int):
 async def cek_profit(ctx):
     try:
         async with aiohttp.ClientSession() as session:
-            async with session.get("http://127.0.0.1:8000/profit/") as response:
+            async with session.get("API_URL") as response:
 
                 if response.status == 200:
                     data = await response.json()
