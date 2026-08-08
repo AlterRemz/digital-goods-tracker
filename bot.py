@@ -32,7 +32,7 @@ async def catat_transaksi(ctx, nama: str, produk: str, modal: int, jual: int):
     try:
         # Menembak data ke API FastAPI secara Asynchronous
         async with aiohttp.ClientSession() as session:
-            async with session.post(API_URL, json=payload) as response:
+            async with session.post(f"{API_URL}/transactions/", json=payload) as response:
                 
                 if response.status == 200:
                     data = await response.json()
@@ -58,7 +58,7 @@ async def catat_transaksi(ctx, nama: str, produk: str, modal: int, jual: int):
 async def cek_profit(ctx):
     try:
         async with aiohttp.ClientSession() as session:
-            async with session.get("API_URL") as response:
+            async with session.get(f"{API_URL}/profit/") as response:
 
                 if response.status == 200:
                     data = await response.json()
@@ -80,7 +80,7 @@ async def update_transaksi(ctx, id_transaksi: int, status_baru: str):
     payload = {
         "status": status_baru.upper()
     }
-    url = f"{API_URL}{id_transaksi}"
+    url = f"{API_URL}/transactions/{id_transaksi}"
 
     try:
         async with aiohttp.ClientSession() as session:
@@ -104,7 +104,7 @@ async def update_transaksi(ctx, id_transaksi: int, status_baru: str):
 # command untuk menghapus transaksi
 @bot.command(name="delete")
 async def hapus_transaksi(ctx, id_transaksi: int):
-    url = f"{API_URL}{id_transaksi}"
+    url = f"{API_URL}/transactions/{id_transaksi}"
 
     try:
         async with aiohttp.ClientSession() as session:
@@ -127,7 +127,7 @@ async def list_transaksi(ctx, jumlah: int = 5):
     
     try:
         async with aiohttp.ClientSession() as session:
-            async with session.get(API_URL) as response:
+            async with session.get(f"{API_URL}/transactions/") as response:
                 
                 if response.status == 200:
                     data = await response.json()

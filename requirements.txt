@@ -2,5 +2,7 @@ fastapi
 uvicorn
 sqlalchemy
 pydantic
+discord.py
+aiohttp
 python-dotenv
 psycopg2-binary
