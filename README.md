@@ -18,9 +18,9 @@ An asynchronous, decoupled backend system designed to log, manage, and calculate
           +------------------------------------ |   Vercel (Cloud)  |
                                                 |   (FastAPI / API) |
                                                 +-------------------+
-                                                  |               ^
+                                                  ^               |
                                     SQLAlchemy    |               | Data/Status
-                                     (Query)      v               |  Response
+                                     (Query)      |               v  Response
                                                 +-------------------+
                                                 | Supabase (Cloud)  |
                                                 | (PostgreSQL DB)   |
@@ -41,22 +41,22 @@ An asynchronous, decoupled backend system designed to log, manage, and calculate
 
 🗄️ **Cloud Data Persistence:** Relational database storage with schema safety.
 
-🌱 **In Active Development**
-- **Dual-Environment Architecture**: Implementing a isolated Development Bot (Staging) to test features locally without affecting Production data.
-- **Enhanced UI/UX**: Upgrading text-based commands to Discord Interactive Modals & Buttons.
+🌱 **In Active Development:**
+- **Dual-Environment Architecture:** Implementing a isolated Development Bot (Staging) to test features locally without affecting Production data.
+- **Enhanced UI/UX:** Upgrading text-based commands to Discord Interactive Modals & Buttons.
 
 ## 📌 REST API Endpoints Overview
-- 📝**(`POST /transactions/`)**: Create a new transaction record
+- 📝(`POST /transactions/`): Create a new transaction record
 
-- 📖**(`GET /transactions/`)**: Fetch transaction history
+- 📖(`GET /transactions/`): Fetch transaction history
 
-- 💰**(`GET /profit/`)**: Calculate dynamic total profit
+- 💰(`GET /profit/`): Calculate dynamic total profit
 
-- ✏️**(`PUT /transactions/{transaction_id}`)**: Update existing transaction record
+- ✏️(`PUT /transactions/{transaction_id}`): Update existing transaction record
 
-- 🗑️**(`DELETE /transactions/{transaction_id}`)**: Remove a transaction
+- 🗑️(`DELETE /transactions/{transaction_id}`): Remove a transaction
 
-## ⚙️ Environment Configuration (`.env`)
+## ⚙️ Environment Configuration (.env)
 Configure the `.env` file locally before running the bot client:
 ```
 API_URL=http://127.0.0.1:8000/transactions/
@@ -64,6 +64,4 @@ DISCORD_TOKEN=your_discord_bot_token_here
 BOT_PREFIX=?
 ```
 ## 👤 Author
-Developed with passion by alterremz
-
-
+Developed with passion by **alterremz**:D
