@@ -8,17 +8,20 @@ load_dotenv()
 
 API_URL = os.getenv("API_URL")
 TOKEN = os.getenv("DISCORD_TOKEN")
+PREFIX = os.getenv("BOT_PREFIX")
+CHANNEL = int(os.getenv("CHANNEL_ID"))
+OWNER = int(os.getenv("OWNER_ID"))
 
 intents = discord.Intents.default()
 intents.message_content = True
 
-bot = commands.Bot(command_prefix="!", intents=intents)
+bot = commands.Bot(command_prefix=PREFIX, intents=intents)
 
 @bot.event
 async def on_ready():
     print(f"🔥 Bot berhasil online sebagai: {bot.user}")
 
-# Command untuk mencatat transaksi
+# command untuk mencatat transaksi
 @bot.command(name="catat")
 async def catat_transaksi(ctx, nama: str, produk: str, modal: int, jual: int):
     payload = {
@@ -156,6 +159,41 @@ async def list_transaksi(ctx, jumlah: int = 5):
     except Exception as e:
         print(f"Error Koneksi: {e}")
         await ctx.send(f"⚠️ Terjadi error saat menghubungi API: {e}")
+
+@bot.command(name="lunas")
+async def lunas_transaksi(ctx, id_transaksi: int):
+    if ctx.author.id != OWNER:
+        return
+
+    payload = {"status": "SUCCESS"}
+    url = f"{API_URL}/transactions/{id_transaksi}"
+
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.put(url, json=payload) as response:
+
+                if response.status == 200:
+                    data = await response.json()
+                    profit = data['selling_price'] - data['capital_price']
+
+                    channel = bot.get_channel(CHANNEL)
+
+                    pesan_bersih = (
+                        f"✅ **TRANSAKSI SELESAI**\n"
+                        f"• ID: `{data['id']}` | Pelanggan: **{data['customer_name']}**\n"
+                        f"• Produk: {data['product_description']}\n"
+                        f"• Profit: Rp {profit:,}"
+                    )
+
+                    await channel.send(pesan_bersih)
+
+                    await ctx.send(f"ID {id_transaksi} sudah dilunaskan dan struk dikirim ke <#{CHANNEL}>.")
+
+                else:
+                    await ctx.send(f"❌ Gagal melunaskan. Status: {response.status}")
+
+    except Exception as e:
+        await ctx.send(f"⚠️ Error: {e}")
 
 if TOKEN is None:
     print("Error: Token Discord tidak di temukan di file .env!")
